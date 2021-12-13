@@ -31,15 +31,14 @@ export const fetchMarks = async () => {
     return data.Body;
   }
 };
-export const editMarks = async (name, color) => {
+export const editMarks = async (values) => {
   var markFilter = {
     token: localStorage.getItem("access-token"),
-    name: name,
-    color: color,
   };
+  var sendFilter = Object.assign(markFilter, values);
   const { data } = await axios.post(
     `https://dev.bein.az/controllers/marks/edit.php`,
-    markFilter
+    sendFilter
   );
 
   if (data.Headers.ResponseStatus === "0") {
@@ -212,6 +211,22 @@ export const fetchPage = async (page, pg, dr, sr, gp, zeros, ar) => {
   }
 };
 
+export const fetchCheck = async (controllername, id) => {
+  var navFilter = {
+    token: localStorage.getItem("access-token"),
+    id: id,
+  };
+  const { data } = await axios.post(
+    `https://dev.bein.az/controllers/${controllername}/get.php`,
+    navFilter
+  );
+
+  if (data.Headers.ResponseStatus === "0") {
+    return data;
+  } else {
+    return data.Body;
+  }
+};
 export const delDoc = async (id, page) => {
   var deldoc = {
     token: localStorage.getItem("access-token"),
@@ -330,6 +345,7 @@ export const fetchDocId = async (id, controller) => {
 };
 
 export const fetchLinkedDoc = async (cus, pg, moment, lm) => {
+  console.log(cus);
   var editFilter = {
     token: localStorage.getItem("access-token"),
     cus: cus,
@@ -576,7 +592,7 @@ export const updateRefList = async (obj) => {
   var editFilter = {
     token: localStorage.getItem("access-token"),
     id: obj.id,
-    refid:obj.refid
+    refid: obj.refid,
   };
   var sendFilter = Object.assign(editFilter, obj.filter);
 
@@ -611,6 +627,21 @@ export const delSpendItems = async (id) => {
   };
   const { data } = await axios.post(
     `https://dev.bein.az/controllers/spenditems/del.php?id=${id}`,
+    deldoc
+  );
+
+  if (data.Headers.ResponseStatus === "0") {
+    return data;
+  } else {
+    return data.Body;
+  }
+};
+export const delMarks = async (id) => {
+  var deldoc = {
+    token: localStorage.getItem("access-token"),
+  };
+  const { data } = await axios.post(
+    `https://dev.bein.az/controllers/marks/del.php?id=${id}`,
     deldoc
   );
 

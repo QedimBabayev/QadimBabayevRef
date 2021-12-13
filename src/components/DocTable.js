@@ -108,6 +108,7 @@ function DocTable({ headers, datas }) {
 
   useEffect(() => {
     if (isAdd) {
+      console.log(newPro)
       var duplicateData = false;
       var index;
       var newData = {
@@ -130,6 +131,7 @@ function DocTable({ headers, datas }) {
         CostPrice: newPro.costprice,
         CostPriceTotal: newPro.costpricetotal,
       };
+      console.log(newData)
       dataSource.find(
         (pd) => String(pd.ProductId) === String(newData.ProductId)
       )
@@ -142,6 +144,7 @@ function DocTable({ headers, datas }) {
         console.log("geldi", dataSource);
         var datas = [...dataSource];
         datas.unshift(newData);
+        console.log(datas)
         setdataSource(datas);
         setOuterDataSource(datas);
         setIsChanged(true);

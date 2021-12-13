@@ -7,6 +7,12 @@ export function ConvertFixedTable(num) {
     : "";
 }
 
+export function ConvertFixedPositionInvoice(num) {
+  var isNum = !isNaN(parseFloat(num));
+  return isNum ? parseFloat(parseFloat(parseFloat(num).toFixed(4))) : null;
+}
+
+
 export function ConvertFixedPosition(num) {
   var isNum = !isNaN(parseFloat(num));
   return isNum ? parseFloat(parseFloat(parseFloat(num).toFixed(4))) : 0.0;

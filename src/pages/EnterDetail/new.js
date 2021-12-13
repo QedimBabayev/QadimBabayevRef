@@ -112,6 +112,13 @@ function NewEnter() {
     setOuterDataSource(dataSource.filter((item) => item.key !== key));
     setPositions(dataSource.filter((item) => item.key !== key));
   };
+
+  useEffect(() => {
+    setDisable(true);
+    return () => {
+      setDisable(true);
+    };
+  }, []);
   const onClose = () => {
     message.destroy();
   };

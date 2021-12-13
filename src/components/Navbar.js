@@ -49,6 +49,8 @@ function Navbar() {
   const getCompany = async () => {
     const compResponse = await fetchCompany();
     setCompany(compResponse.Body.CompanyName);
+    localStorage.setItem("companyname", compResponse.Body.CompanyName);
+    localStorage.setItem("company", JSON.stringify(compResponse.Body));
   };
   const getDepartments = async () => {
     const depResponse = await fetchDepartments();

@@ -51,8 +51,11 @@ export default function ModReference({ visible, openModal }) {
   const [documentList, setDocumentList] = useState(null);
   const [edit, setEdit] = useState(null);
   const [list, setShowList] = useState(false);
-  const { isLoading, error, data, isFetching } = useQuery(["references"], () =>
-    fetchRefTypes()
+  const { isLoading, error, data, isFetching } = useQuery(
+    ["references", visible],
+    () => {
+      return visible ? fetchRefTypes() : null
+    } 
   );
   const updateMutation = useMutation(updateRef, {
     refetchQueris: ["references"],

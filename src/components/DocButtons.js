@@ -10,6 +10,7 @@ import {
   DeleteOutlined,
   CloseCircleOutlined,
   DownOutlined,
+  PrinterOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import { delDoc } from "../api";
@@ -29,6 +30,10 @@ function DocButtons({ closed, editid, controller, linked, additional }) {
   const handleRedirectDoc = () => {
     setRedirectDoc(true);
   };
+
+  const goCheckPage = () => {
+    
+  }
 
   const deleteDoc = async () => {
     message.loading({ content: "Loading...", key: "doc_delete" });
@@ -68,6 +73,22 @@ function DocButtons({ closed, editid, controller, linked, additional }) {
       <Menu.Divider />
     </Menu>
   );
+    const check = (
+      <Menu>
+        <Menu.Item key="0">
+          <Link
+            to={{
+              pathname: "/invoice",
+              search: `${editid}`,
+              hash: "enters",
+            }}
+            target={"_blank"}
+          >
+            A4
+          </Link>
+        </Menu.Item>
+      </Menu>
+    );
   const menu = (
     <Menu>
       <Menu.Item key="0">
@@ -101,7 +122,12 @@ function DocButtons({ closed, editid, controller, linked, additional }) {
     <div className="doc_buttons_wrapper">
       <div className="left_doc_button">
         <Button
-          style={{ display: controller === "sales" || controller === 'returns' ? "none" : "block" }}
+          style={{
+            display:
+              controller === "sales" || controller === "returns"
+                ? "none"
+                : "block",
+          }}
           className="customsavebtn"
           form={"myForm"}
           htmlType={"submit"}
@@ -133,6 +159,17 @@ function DocButtons({ closed, editid, controller, linked, additional }) {
         </Dropdown>
       </div>
       <div className="right_doc_button">
+        <Dropdown
+          className="mobilehidden checkbutton"
+          disabled={editid ? false : true}
+          overlay={check}
+          trigger={["click"]}
+        >
+          <Button className="flex_directon_col_center d-flex-row">
+            Qaimə
+            <PrinterOutlined />
+          </Button>
+        </Dropdown>
         <Dropdown overlay={dots} trigger={["click"]}>
           <Button
             className="form_setting_icon_wrapper flex_directon_col_center"

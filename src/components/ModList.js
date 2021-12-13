@@ -54,11 +54,14 @@ export default function ModList({ visible, openModal, editid }) {
 
   const [filterText, setFilterText] = useState("");
   const [documentList, setDocumentList] = useState(null);
-  const [edit, setEdit] = useState(null);
+  const [editRefItem, setEditRefItem] = useState(null);
+  const [editVisible, setEditVisible] = useState(false);
 
   const { isLoading, error, data, isFetching } = useQuery(
-    ["reflists", editid],
-    () => fetchRefList(editid)
+    ["reflists", editid, visible],
+    () => {
+      return visible ? fetchRefList(editid) : null;
+    }
   );
   const updateMutation = useMutation(updateRefList, {
     refetchQueris: ["reflists"],
@@ -67,7 +70,16 @@ export default function ModList({ visible, openModal, editid }) {
   const deleteMutation = useMutation(delRefsList, {
     refetchQueris: ["reflists"],
   });
-  const handleEdit = (id) => {};
+  const handleEdit = (id, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setEditVisible(true);
+    setEditRefItem({
+      Name: data.find((c) => c.Id === e.target.id).Name,
+      RefId: editid,
+      Id: e.target.id,
+    });
+  };
 
   const onClose = () => {
     message.destroy();
@@ -161,6 +173,55 @@ export default function ModList({ visible, openModal, editid }) {
       }
     );
   };
+  const handleFinishRef = async (values) => {
+    message.loading({ content: "Loading...", key: "doc_update" });
+    updateMutation.mutate(
+      { refid: editid, filter: values },
+      {
+        onSuccess: (res) => {
+          if (res.Headers.ResponseStatus === "0") {
+            if (res.Body.ResponseStatus && res.Body.ResponseStatus === "0") {
+              message.success({
+                content: "Updated",
+                key: "doc_update",
+                duration: 2,
+              });
+              queryClient.invalidateQueries("reflists");
+              form.resetFields();
+              setEditVisible(false);
+            } else {
+              message.error({
+                content: (
+                  <span className="error_mess_wrap">
+                    Saxlanılmadı... {res.Body}{" "}
+                    {<CloseCircleOutlined onClick={onClose} />}
+                  </span>
+                ),
+                key: "doc_update",
+                duration: 0,
+              });
+              form.resetFields();
+            }
+          } else {
+            message.error({
+              content: (
+                <span className="error_mess_wrap">
+                  Saxlanılmadı... {res.Body}{" "}
+                  {<CloseCircleOutlined onClick={onClose} />}
+                </span>
+              ),
+              key: "doc_update",
+              duration: 0,
+            });
+            form.resetFields();
+          }
+        },
+        onError: (e) => {
+          console.log(e);
+        },
+      }
+    );
+  };
 
   const onSearch = (value) => {
     console.log(value);
@@ -213,7 +274,7 @@ export default function ModList({ visible, openModal, editid }) {
                       key="list-loadmore-edit"
                       href="/"
                       id={item.Id}
-                      // onClick={onClick}
+                      onClick={(e) => handleEdit(item.Id, e)}
                     >
                       dəyiş
                     </a>,
@@ -276,6 +337,68 @@ export default function ModList({ visible, openModal, editid }) {
             </Form>
           </Col>
         </Row>
+      </Modal>
+
+      <Modal
+        visible={editVisible}
+        title="Title"
+        destroyOnClose={true}
+        onCancel={() => setEditVisible(false)}
+        footer={[
+          <Button key="back" onClick={() => setEditVisible(false)}>
+            Bağla
+          </Button>,
+          <Button
+            key="submit"
+            htmlType="submit"
+            type="primary"
+            form="createnewlistitemform"
+          >
+            Submit
+          </Button>,
+        ]}
+      >
+        <Form
+          id="createnewlistitemform"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          initialValues={{
+            name: editRefItem ? editRefItem.Name : "",
+            id: editRefItem ? editRefItem.Id : "",
+            refid: editRefItem ? editRefItem.RefId : "",
+          }}
+          onFinish={handleFinishRef}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Adı"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Zəhmət olmasa xananı doldurun!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="refid" name="refid" hidden={true}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="id" name="id" hidden={true}>
+            <Input />
+          </Form.Item>
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          ></Form.Item>
+        </Form>
       </Modal>
     </div>
   );

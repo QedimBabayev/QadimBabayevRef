@@ -141,12 +141,23 @@ function EnterDetail() {
       setConsumption(data.Body.List[0].Consumption);
       setLoadingForm(false);
       setStatus(data.Body.List[0].Status);
+      form.setFieldsValue({
+        mark: data.Body.List[0].Mark,
+      });
     } else {
       customPositions = [];
       setPositions([]);
       setLoadingForm(true);
     }
   }, [isFetching]);
+
+  useEffect(() => {
+    setDisable(true);
+
+    return () => {
+      setDisable(true);
+    };
+  }, []);
 
   const onClose = () => {
     message.destroy();
@@ -333,6 +344,11 @@ function EnterDetail() {
     }
   }, [createdStock]);
 
+  useEffect(() => {
+    form.setFieldsValue({
+      mark: Number(docmark),
+    });
+  }, [docmark]);
   const getStocksAgain = async () => {
     const stockResponse = await fetchStocks();
     setStock(stockResponse.Body.List);
@@ -445,8 +461,8 @@ function EnterDetail() {
           }
         },
         onError: (e) => {
-            console.log(e)
-        }
+          console.log(e);
+        },
       }
     );
   };
@@ -677,9 +693,8 @@ function EnterDetail() {
                       name="status"
                     ></Checkbox>
                   </Form.Item>
-                  <Form.Item label="Status" name="mark">
-                    <StatusSelect defaultValue={null} />
-                  </Form.Item>
+
+                  <StatusSelect defaultvalue={data.Body.List[0].Mark} />
                 </Panel>
               </Collapse>
             </Col>

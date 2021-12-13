@@ -219,8 +219,10 @@ export default function Settlement() {
   }, [isFetching]);
 
   const editPage = (id) => {
-    setVisibleDrawer(true);
+    console.log(id)
+
     setcusid(id);
+    setVisibleDrawer(true);
   };
 
   const handlePagination = (pg) => {
@@ -366,10 +368,10 @@ export default function Settlement() {
         }}
         size="small"
         onRow={(r) => ({
-          onDoubleClick: () => editPage(r.Id),
+          onDoubleClick: () => editPage(r.CustomerId),
         })}
       />
-     {visibleDrawer ? <SettlementsDrawer /> : null} 
+      {visibleDrawer ? <SettlementsDrawer /> : null}
     </div>
   );
 }

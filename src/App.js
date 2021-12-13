@@ -55,6 +55,7 @@ const Customer = React.lazy(() => import("./pages/Customer"));
 const NewDemand = React.lazy(() => import("./pages/DemandDetail/new"));
 const DemandDetail = React.lazy(() => import("./pages/DemandDetail"));
 const Bc = React.lazy(() => import("./Check.js/bc"));
+const Invoice = React.lazy(() => import("./Check.js/invoice"));
 const NewDemandReturn = React.lazy(() =>
   import("./pages/DemandReturnDetail/new")
 );
@@ -113,6 +114,7 @@ function App() {
               <Route path="/p=transactions" component={Transaction}></Route>
               <Route path="/p=cashins" component={CashIn}></Route>
               <Route exact path="/bc" component={Bc} />
+              <Route exact path="/invoice" component={Invoice} />
 
               <Route path="/settings" component={Settings}></Route>
               <Route path="/p=cashes" component={Cashe}></Route>
